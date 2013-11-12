@@ -1199,6 +1199,7 @@ dispatch_cmd(Conn *c)
 
     /* check for possible maliciousness */
     if (strlen(c->cmd) != c->cmd_len - 2) {
+        printf("%s\n", "Failed maliciousness check");
         return reply_msg(c, MSG_BAD_FORMAT);
     }
 
@@ -1552,7 +1553,10 @@ dispatch_cmd(Conn *c)
         break;
     case OP_IGNORE:
         name = c->cmd + CMD_IGNORE_LEN;
-        if (!name_is_ok(name, 200)) return reply_msg(c, MSG_BAD_FORMAT);
+        if (!name_is_ok(name, 200)) {
+          printf("%s\n", "Failed name_is_ok check");
+          return reply_msg(c, MSG_BAD_FORMAT);
+        }
         op_ct[type]++;
 
         t = NULL;
