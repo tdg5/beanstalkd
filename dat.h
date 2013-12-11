@@ -89,10 +89,9 @@ struct Socket {
     void   *x;
     int    added;
 };
-
-void sockinit(Handle tick, void *x, int64 ns);
-int  sockwant(Socket *s, int rw);
-void sockmain(void); // does not return
+int sockinit(void);
+int sockwant(Socket*, int);
+int socknext(Socket**, int64);
 
 struct ms {
     size_t used, cap, last;
@@ -382,4 +381,3 @@ struct Server {
 };
 void srvserve(Server *srv);
 void srvaccept(Server *s, int ev);
-void srvtick(Server *s, int ev);
