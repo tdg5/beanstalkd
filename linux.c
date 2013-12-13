@@ -68,24 +68,23 @@ sockwant(Socket *s, int rw)
 
 
 int
-socknext(Socket **s, int64 timeout)
+socknext(struct epoll_event *ev, Socket **s, int64 timeout)
 {
     int r;
-    struct epoll_event ev;
 
-    r = epoll_wait(epfd, &ev, 1, (int)(timeout/1000000));
+    r = epoll_wait(epfd, ev, 1, (int)(timeout/1000000));
     if (r == -1 && errno != EINTR) {
         twarn("epoll_wait");
         exit(1);
     }
 
     if (r) {
-        *s = ev.data.ptr;
-        if (ev.events & (EPOLLHUP|EPOLLRDHUP)) {
+        *s = ev->data.ptr;
+        if (ev->events & (EPOLLHUP|EPOLLRDHUP)) {
             return 'h';
-        } else if (ev.events & EPOLLIN) {
+        } else if (ev->events & EPOLLIN) {
             return 'r';
-        } else if (ev.events & EPOLLOUT) {
+        } else if (ev->events & EPOLLOUT) {
             return 'w';
         }
     }

@@ -1,6 +1,7 @@
 // Requirements:
 // #include <stdint.h>
 // #include <stdlib.h>
+#include <sys/epoll.h>
 
 typedef unsigned char uchar;
 typedef uchar         byte;
@@ -94,7 +95,7 @@ struct Socket {
 };
 int sockinit(void);
 int sockwant(Socket*, int);
-int socknext(Socket**, int64);
+int socknext(struct epoll_event*, Socket**, int64);
 
 struct ms {
     size_t used, cap, last;

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include "dat.h"
+#include <sys/epoll.h>
 
 struct Server srv = {
     Portdef,
@@ -43,10 +44,11 @@ srvserve(Server *s)
     }
 
 
+    struct epoll_event ev;
     for (;;) {
         period = prottick(s);
 
-        int rw = socknext(&sock, period);
+        int rw = socknext(&ev, &sock, period);
         if (rw == -1) {
             twarnx("socknext");
             exit(1);
